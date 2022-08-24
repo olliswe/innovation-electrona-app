@@ -7,7 +7,9 @@ declare global {
     electronAPI: {
       sendBashCommand: (args: any) => void;
       killProcesses: () => void;
-      onProcessData: any;
+      onData: any;
+      saveCwd: (args: { cwd: string }) => void;
+      storeData: () => void;
     };
   }
 }

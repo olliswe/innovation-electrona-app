@@ -1,5 +1,6 @@
-import { TextField } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import React from "react";
+import SaveIcon from "@mui/icons-material/Save";
 
 interface CwdInputProps {
   currentCwd: string;
@@ -13,13 +14,23 @@ const CwdInput = ({ currentCwd, setCwd }: CwdInputProps) => {
   };
 
   return (
-    <TextField
-      id="outlined-name"
-      label="Current working directory"
-      value={currentCwd}
-      onChange={handleInputChange}
-      style={{ width: "100%" }}
-    />
+    <>
+      <TextField
+        id="outlined-name"
+        label="Current working directory"
+        value={currentCwd}
+        onChange={handleInputChange}
+        style={{ width: "100%" }}
+      />
+      <IconButton
+        color="success"
+        onClick={(event) => {
+          window.electronAPI.saveCwd({ cwd: currentCwd });
+        }}
+      >
+        <SaveIcon />
+      </IconButton>
+    </>
   );
 };
 

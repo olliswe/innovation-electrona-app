@@ -31,7 +31,6 @@ export async function runCommand(command: string, cwd: string) {
 
   // @ts-ignore
   const commandOption = COMMAND_OPTIONS[command];
-  console.log(cwd);
   const newProcess = spawn(commandOption.command, commandOption.args, {
     ...commandOption.options,
     cwd: cwd,
@@ -48,7 +47,10 @@ export async function runCommand(command: string, cwd: string) {
 
     console.log("stdout: " + data);
 
-    getWindow().webContents.send("process-data", data.toString());
+    getWindow().webContents.send(
+      "data",
+      JSON.stringify({ type: "process-data", payload: data.toString() })
+    );
 
     data = data.toString();
     scriptOutput += data;
