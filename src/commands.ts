@@ -1,15 +1,17 @@
-import { spawn } from "child_process";
-import { activeProcesses } from "./index";
+import { spawn, ChildProcess } from "child_process";
 import { BrowserWindow } from "electron";
+import { homedir} from "os";
 
 const getWindow = () => BrowserWindow.getAllWindows()[0];
+
+const PROJECTS_PATH = homedir() + "/Projects"
 
 const COMMAND_OPTIONS = {
   sampleReact: {
     command: "npm",
     args: ["start"],
     options: {
-      cwd: "/Users/oliveriyer/Projects/whathappenedtovirgil",
+      cwd: PROJECTS_PATH + "/whathappenedtovirgil",
       env: {
         ...process.env,
         PORT: "3030",
@@ -20,12 +22,12 @@ const COMMAND_OPTIONS = {
     command: "bin/dev",
     args: ["server"],
     options: {
-      cwd: "/Users/oliveriyer/Projects/doctolib",
+      cwd: PROJECTS_PATH + "/doctolib",
     },
   },
 };
 
-export async function runCommand(command: string, cwd: string) {
+export function run(command: string, cwd: string): ChildProcess {
   // const { stdout, stderr } = await execPromisified(command);
   // console.log({ stdout, stderr });
 
@@ -36,8 +38,6 @@ export async function runCommand(command: string, cwd: string) {
     cwd: cwd,
     detached: true,
   });
-
-  activeProcesses.push(newProcess);
 
   let scriptOutput = "";
 
@@ -73,4 +73,6 @@ export async function runCommand(command: string, cwd: string) {
 
     console.log("Full output of script: ", scriptOutput);
   });
+
+  return newProcess;
 }
