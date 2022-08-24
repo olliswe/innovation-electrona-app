@@ -1,4 +1,6 @@
 import React from "react";
+import { IconButton } from "@mui/material";
+import { PlayCircle, StopCircle } from "@mui/icons-material";
 
 export interface RunButtonProps {
   disabled: boolean;
@@ -8,15 +10,21 @@ export interface RunButtonProps {
 }
 
 const RunButton = ({ disabled, command, setRunning, cwd }: RunButtonProps) => {
-  const onRun = () => {
+  const onRun = (event: any) => {
+    event.stopPropagation();
     window.electronAPI.sendBashCommand({ cmnd: command, cwd: cwd });
     setRunning(true);
   };
 
   return (
-    <button onClick={onRun} disabled={disabled}>
-      Icon
-    </button>
+    <IconButton
+      onClick={onRun}
+      disabled={disabled}
+      style={{ marginLeft: "auto" }}
+      color="success"
+    >
+      {disabled ? <StopCircle /> : <PlayCircle />}
+    </IconButton>
   );
 };
 

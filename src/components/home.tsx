@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import CwdInput from "./CwdInput";
 import RunnableProcess from "./RunnableProcess";
-import RunButton from "./RunButton";
+import Button from "@mui/material/Button";
 
 const Home = () => {
   const [running, setRunning] = useState(false);
   const [message, setMessage] = useState("");
-  const [cwd, setCwd] = useState("/Users/oliveriyer/Projects/doctolib");
+  const [cwd, setCwd] = useState("/Users/kriti/doctolib");
 
   const onKill = () => {
     window.electronAPI.killProcesses();
@@ -21,7 +21,7 @@ const Home = () => {
   }, []);
 
   return (
-    <>
+    <div>
       <div style={{ display: "flex", flexDirection: "row" }}>
         <CwdInput currentCwd={cwd} setCwd={setCwd} />
       </div>
@@ -36,14 +36,11 @@ const Home = () => {
             cwd: cwd,
           }}
         ></RunnableProcess>
-        <button onClick={onKill} disabled={!running}>
-          Kill process
-        </button>
-        <div style={{ height: 1000, overflow: "scroll" }}>
-          <div dangerouslySetInnerHTML={{ __html: message }} />
-        </div>
+        <Button onClick={onKill} disabled={!running} variant={"contained"}>
+          Kill processes
+        </Button>
       </div>
-    </>
+    </div>
   );
 };
 

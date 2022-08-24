@@ -18,6 +18,7 @@ const CwdInput = ({ currentCwd, setCwd }: CwdInputProps) => {
       label="Current working directory"
       value={currentCwd}
       onChange={handleInputChange}
+      style={{ width: "100%" }}
     />
   );
 };
