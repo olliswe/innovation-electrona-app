@@ -5,14 +5,16 @@ const RunButton = ({
   command,
   label,
   setRunning,
+  cwd,
 }: {
   disabled: boolean;
   command: string;
   label: string;
   setRunning: any;
+  cwd: string;
 }) => {
   const onRun = () => {
-    window.electronAPI.sendBashCommand({ cmnd: command });
+    window.electronAPI.sendBashCommand({ cmnd: command, cwd: cwd });
     setRunning(true);
   };
 
@@ -23,9 +25,35 @@ const RunButton = ({
   );
 };
 
+interface CwdInputProps {
+  currentCwd: string;
+  setCwd: (text: string) => void;
+}
+
+const CwdInput = ({ currentCwd, setCwd }: CwdInputProps) => {
+  const handleInputChange = (event: any) => {
+    event.preventDefault();
+    setCwd(event.target.value);
+  };
+
+  return (
+    <form>
+      <label>
+        Current working directory:
+        <input
+          type="text"
+          value={currentCwd}
+          onChange={handleInputChange}
+        ></input>
+      </label>
+    </form>
+  );
+};
+
 const Home = () => {
   const [running, setRunning] = useState(false);
   const [message, setMessage] = useState("");
+  const [cwd, setCwd] = useState("/Users/oliveriyer/Projects/doctolib");
 
   const onKill = () => {
     window.electronAPI.killProcesses();
@@ -40,26 +68,33 @@ const Home = () => {
   }, []);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <RunButton
-        disabled={!!running}
-        command={"sampleReact"}
-        label={"Run a random react app"}
-        setRunning={setRunning}
-      />
-      <RunButton
-        disabled={!!running}
-        command={"doctoRails"}
-        label={"Run doctolib rails server"}
-        setRunning={setRunning}
-      />
-      <button onClick={onKill} disabled={!running}>
-        Kill process
-      </button>
-      <div style={{ height: 1000, overflow: "scroll" }}>
-        <div dangerouslySetInnerHTML={{ __html: message }} />
+    <>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <CwdInput currentCwd={cwd} setCwd={setCwd} />
       </div>
-    </div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <RunButton
+          disabled={!!running}
+          command={"sampleReact"}
+          label={"Run a random react app"}
+          setRunning={setRunning}
+          cwd={cwd}
+        />
+        <RunButton
+          disabled={!!running}
+          command={"doctoRails"}
+          label={"Run doctolib rails server"}
+          setRunning={setRunning}
+          cwd={cwd}
+        />
+        <button onClick={onKill} disabled={!running}>
+          Kill process
+        </button>
+        <div style={{ height: 1000, overflow: "scroll" }}>
+          <div dangerouslySetInnerHTML={{ __html: message }} />
+        </div>
+      </div>
+    </>
   );
 };
 

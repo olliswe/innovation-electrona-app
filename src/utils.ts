@@ -25,15 +25,16 @@ const COMMAND_OPTIONS = {
   },
 };
 
-export async function runCommand(command: string) {
+export async function runCommand(command: string, cwd: string) {
   // const { stdout, stderr } = await execPromisified(command);
   // console.log({ stdout, stderr });
 
   // @ts-ignore
   const commandOption = COMMAND_OPTIONS[command];
-
+  console.log(cwd);
   const newProcess = spawn(commandOption.command, commandOption.args, {
     ...commandOption.options,
+    cwd: cwd,
     detached: true,
   });
 

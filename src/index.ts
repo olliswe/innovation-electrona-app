@@ -25,7 +25,7 @@ if (require("electron-squirrel-startup")) {
 
 const loadIpcEvents = () => {
   ipcMain.on(IPC_EVENTS.EXEC, (event, args) => {
-    runCommand(args.cmnd);
+    runCommand(args.cmnd, args.cwd);
   });
   ipcMain.on(IPC_EVENTS.KILL_ALL, (event, args) => {
     killAllProcesses();
