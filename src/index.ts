@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, Menu, Tray, nativeImage } from "electron";
 import { IPC_EVENTS } from "./constants";
 import { runCommand } from "./utils";
 
@@ -8,6 +8,7 @@ import { runCommand } from "./utils";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
+let tray: Tray;
 export const activeProcesses: any[] = [];
 
 export const killAllProcesses = () => {
@@ -51,10 +52,27 @@ const createWindow = (): void => {
   mainWindow.webContents.openDevTools();
 };
 
+const createTray = (): void => {
+  if (tray) return;
+  const icon = nativeImage.createFromPath('./static/icons/menuIcon.png');
+  tray = new Tray(icon);
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Item1', type: 'radio' },
+    { label: 'Item2', type: 'radio' },
+    { label: 'Item3', type: 'radio', checked: true },
+    { label: 'Item4', type: 'radio' },
+  ]);
+  tray.setToolTip('This is my application.');
+  tray.setContextMenu(contextMenu);
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+  createWindow();
+  createTray();
+});
 
 app.on("before-quit", () => {
   killAllProcesses();
